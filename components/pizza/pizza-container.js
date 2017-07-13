@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import fetch from 'isomorphic-fetch';
-// import {NoResultsFound} from './pizza-box/no-results';
+import NoResultsFound from './pizza-box/no-results';
 import SearchPizza from './pizza-box/search-pizza';
 import SortPizza from './pizza-box/sort-pizza';
 
@@ -15,8 +15,6 @@ export default class PizzaContainer extends React.Component{
         };
         this.filterList = this.filterList.bind(this);
         this.showFilteredPizza = this.showFilteredPizza.bind(this);
-        this.sortFilteredPizza = this.sortFilteredPizza.bind(this);
-        this.sortDefaultPizza = this.sortDefaultPizza.bind(this);
     }
 
     loadPizzaJson() {
@@ -41,21 +39,8 @@ export default class PizzaContainer extends React.Component{
         this.setState({filteredPizza: updatedPizzaList});
     }
 
-    sortDefaultPizza() {
-        var sortedDefaultPizza = this.state.pizzaList;
-
-        sortedDefaultPizza = sortedDefaultPizza.sort(function(a, b){
-            var pizza_ele1 = a.toLowerCase(), pizza_ele2 = b.toLowerCase();
-
-            return pizza_ele1 === pizza_ele2 ? 0 : pizza_ele1 > pizza_ele2 ? 1 : -1;
-        });
-        this.setState({
-            pizzaList: sortedDefaultPizza.reverse()
-        })
-    }
-
-    sortFilteredPizza() {
-        var sortedFilteredList = this.state.filteredPizza;
+    sortPizzas(ListOfPizzas, Lists) {
+        var sortedFilteredList = ListOfPizzas;
 
         sortedFilteredList = sortedFilteredList.sort(function(a, b){
             var pizza_ele1 = a.toLowerCase(), pizza_ele2 = b.toLowerCase();
@@ -63,7 +48,7 @@ export default class PizzaContainer extends React.Component{
             return pizza_ele1 === pizza_ele2 ? 0 : pizza_ele1 > pizza_ele2 ? 1 : -1;
         });
         this.setState({
-            filteredPizza: sortedFilteredList.reverse()
+            Lists: sortedFilteredList.reverse()
         })
     }
 
@@ -71,16 +56,23 @@ export default class PizzaContainer extends React.Component{
         if (this.state.showDefaultPizza) {
             return (
                 <div className="pizza-box">
-                    <SortPizza onClick={this.sortDefaultPizza}/>
+                    <SortPizza onClick={this.sortPizzas.bind(this, this.state.pizzaList, 'pizzaList')}/>
                     <PizzaList Pizzas={this.state.pizzaList}/>
                 </div>
             );
         }
-        else if(!this.state.showDefaultPizza) {
+        else if(!this.state.showDefaultPizza && this.state.filteredPizza.length > 0) {
             return (
                 <div className="pizza-box">
-                    <SortPizza onClick={this.sortFilteredPizza}/>
+                    <SortPizza onClick={this.sortPizzas.bind(this, this.state.filteredPizza, 'filteredPizza')}/>
                     <PizzaList Pizzas={this.state.filteredPizza}/>
+                </div>
+            );
+        }
+        else if(this.state.filteredPizza <= 0){
+            return(
+                <div className="no-found-results">
+                    <NoResultsFound/>
                 </div>
             );
         }

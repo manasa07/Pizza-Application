@@ -6,6 +6,7 @@ import sinon from 'sinon';
 
 import SearchPizza from '../../components/pizza/pizza-box/search-pizza';
 import SortPizza from '../../components/pizza/pizza-box/sort-pizza';
+import NoResultsFound from '../../components/pizza/pizza-box/no-results';
 import PizzaContainer from '../../components/pizza/pizza-container';
 
 const chance = new Chance();
@@ -60,6 +61,18 @@ describe('pizza container component', () => {
 
         sortBox.props.onClick();
         expect(renderedElement.state('pizzaList')).to.equal(sortedList);
+    });
+
+    describe('when there are no matching results', () => {
+        beforeEach(() => {
+            renderedElement.setState({
+                showDefaultPizza: false,
+                filterList: []
+            })
+        });
+        it('should show NoResultFound Component', () => {
+            expect(renderedElement.props().children[2].props.children.type).to.equal(NoResultsFound);
+        });
     });
 
 });
