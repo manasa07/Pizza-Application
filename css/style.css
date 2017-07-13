@@ -1,0 +1,14 @@
+.loading {
+    font-size: 40px;
+    margin-left: 550px;
+    margin-top: 380px;
+}
+.header {
+    background-color: transparent;
+    text-align: center;
+    text-shadow: brown;
+}
+.pizza-sort{
+    margin-top: -20px;
+    margin-bottom: 20px;
+}
